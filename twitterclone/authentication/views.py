@@ -17,7 +17,8 @@ def signup_view(request):
         if form.is_valid():
             data = form.cleaned_data
             user = User.objects.create_user(
-                data['username'], data['password']
+                username=data['username'], 
+                password=data['password']
             )
             login(request, user)
             TwitterUser.objects.create(
@@ -43,6 +44,7 @@ def login_view(request):
             user = authenticate(username=data['username'], password=data['password'])
             if user is not None:
                 login(request, user)
+                # return HttpResponseRedirect(reverse('homepage'))
                 return HttpResponseRedirect(request.GET.get('next','/'))
     else:
         form = LoginForm()

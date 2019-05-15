@@ -18,13 +18,18 @@ from django.urls import path
 from twitterclone.twitterusers.views import index_view
 from twitterclone.authentication.views import signup_view
 from twitterclone.authentication.models import TwitterUser
+from twitterclone.tweets.models import Tweet
 from twitterclone.twitterusers.urls import urlpatterns as twitteruser_urls
 from twitterclone.authentication.urls import urlpatterns as authentiaction_urls
+from twitterclone.tweets.urls import urlpatterns as tweet_urls
+
 
 admin.site.register(TwitterUser)
+admin.site.register(Tweet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 urlpatterns += twitteruser_urls
 urlpatterns += authentiaction_urls
+urlpatterns += tweet_urls

@@ -1,0 +1,9 @@
+<div>
+    <form action='' method='post'>
+        {% csrf_token %}
+        <p>What's on your mind?:
+            {{ form.body }}
+            <input type='submit' value='tweet'>
+        </p>
+    </form>
+</div>
