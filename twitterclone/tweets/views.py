@@ -18,3 +18,10 @@ def add_tweet_view(request):
     else:
         form = WriteTweetForm()
     return render(request,html, {'form':form})
+
+def tweet_view(request, tweet_id):
+
+    tweet = Tweet.objects.filter(id=tweet_id).first
+    html = 'tweet.html'
+    return render(request, html, {'tweet':tweet})
+    
