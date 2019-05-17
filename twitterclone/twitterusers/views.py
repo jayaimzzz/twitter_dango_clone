@@ -14,14 +14,37 @@ def index_view(request):
 
 def profile_view(request, user_id):
     user = TwitterUser.objects.filter(user=user_id).first()
-    # user = TwitterUser.objects.get(user=user_id)
+    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
     tweets = Tweet.objects.filter(author=user)
     sorted_tweets = sorted(tweets, key=lambda tweet: tweet.created, reverse=True)
     html = 'profile.html'
+    # print(dir(logged_in_user.following))
+    if user in logged_in_user.following.get_queryset():
+        follow_unfollow = 'unfollow'
+    else:
+        follow_unfollow = 'follow'
     return render(request, html, {
         'user': user, 
-        'tweets': sorted_tweets
+        'tweets': sorted_tweets,
+        'follow_unfollow': follow_unfollow
         })
 
 def follow_success_view(request, user_id):
-    
+    user_to_follow = TwitterUser.objects.filter(user=user_id).first()
+    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
+    logged_in_user.following.add(user_to_follow)
+    logged_in_user.save()
+    print(logged_in_user)
+    html = 'profile.html'
+    return render(request, html)
+
+def toggle_following_view(request, user_id):
+    user_to_follow = TwitterUser.objects.filter(user=user_id).first()
+    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
+    if user_to_follow in logged_in_user.following.get_queryset():
+        logged_in_user.following.remove(user_to_follow),
+    else:
+        logged_in_user.following.add(user_to_follow)
+    logged_in_user.save()
+    html = 'profile.html'
+    return profile_view(request, user_id)
