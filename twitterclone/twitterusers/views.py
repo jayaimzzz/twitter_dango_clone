@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from twitterclone.tweets.models import Tweet
 from twitterclone.authentication.models import TwitterUser
@@ -29,14 +29,6 @@ def profile_view(request, user_id):
         'follow_unfollow': follow_unfollow
         })
 
-def follow_success_view(request, user_id):
-    user_to_follow = TwitterUser.objects.filter(user=user_id).first()
-    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
-    logged_in_user.following.add(user_to_follow)
-    logged_in_user.save()
-    print(logged_in_user)
-    html = 'profile.html'
-    return render(request, html)
 
 def toggle_following_view(request, user_id):
     user_to_follow = TwitterUser.objects.filter(user=user_id).first()
@@ -47,4 +39,5 @@ def toggle_following_view(request, user_id):
         logged_in_user.following.add(user_to_follow)
     logged_in_user.save()
     html = 'profile.html'
-    return profile_view(request, user_id)
+    # return profile_view(request, user_id)
+    return redirect('/profile/' + str(user_id))
