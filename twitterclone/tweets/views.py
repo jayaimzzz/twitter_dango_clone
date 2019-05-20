@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from twitterclone.tweets.forms import WriteTweetForm
 from twitterclone.tweets.models import Tweet
 
+@login_required()
 def add_tweet_view(request):
     html = 'addtweet_partial.html'
     form = None
