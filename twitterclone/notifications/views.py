@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.notifications.models import Notification
 
