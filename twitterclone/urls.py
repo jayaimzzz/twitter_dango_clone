@@ -19,6 +19,7 @@ from twitterclone.twitterusers.views import index_view
 from twitterclone.authentication.views import signup_view
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.tweets.models import Tweet
+from twitterclone.notifications.models import Notification
 from twitterclone.twitterusers.urls import urlpatterns as twitteruser_urls
 from twitterclone.authentication.urls import urlpatterns as authentiaction_urls
 from twitterclone.tweets.urls import urlpatterns as tweet_urls
@@ -26,6 +27,7 @@ from twitterclone.tweets.urls import urlpatterns as tweet_urls
 
 admin.site.register(TwitterUser)
 admin.site.register(Tweet)
+admin.site.register(Notification)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

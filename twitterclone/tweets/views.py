@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from twitterclone.tweets.forms import WriteTweetForm
 from twitterclone.tweets.models import Tweet
+from twitterclone.tweets.helpers import make_notifications
 
 @login_required()
 def add_tweet_view(request):
@@ -12,10 +13,11 @@ def add_tweet_view(request):
         if form.is_valid():
             data = form.cleaned_data
             author = request.user.twitteruser
-            Tweet.objects.create(
+            tweet = Tweet.objects.create(
                 body=data['body'],
                 author=author
             )
+            make_notifications(tweet)
             return render(request, 'addtweetsuccess.html')
     else:
         form = WriteTweetForm()
