@@ -18,6 +18,7 @@ def profile_view(request, user_id):
     data = {
         'user': user,
         'tweets': sorted_tweets,
+        'qty_of_tweets': len(sorted_tweets),
         'follow_unfollow': 'follow'
     }
     if hasattr(request.user, 'twitteruser'):
