@@ -3,24 +3,19 @@ from django.contrib.auth.decorators import login_required
 from twitterclone.tweets.models import Tweet
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.notifications.models import Notification
+from twitterclone.helpers import get_navbar_data
 
 @login_required()
 def index_view(request):
-    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
-    following = logged_in_user.following.get_queryset()
-    # tweets = [tweet for tweet in Tweet.objects.filter(author=user) for user in following]
+    data = get_navbar_data(request)
+    following = data['logged_in_user'].following.get_queryset()
     tweets = []
     for user in following:
         for tweet in Tweet.objects.filter(author=user):
             tweets.append(tweet)
     sorted_tweets = sorted(tweets,key=lambda tweet: tweet.created, reverse=True)
-    qty_of_notifcations = Notification.objects.filter(user_to_notify=logged_in_user).count()
     html = 'index.html'
-    data = {
-        'tweets': sorted_tweets,
-        'logged_in_user': logged_in_user,
-        'qty_of_notifications': qty_of_notifcations
-    }
+    data['tweets'] = sorted_tweets
     return render(request, html, data)
 
 def profile_view(request, user_name):
@@ -36,11 +31,8 @@ def profile_view(request, user_name):
         'qty_following': following.count()
     }
     if hasattr(request.user, 'twitteruser'):
-        logged_in_user = TwitterUser.objects.filter(user=request.user).first()
-        qty_of_notifcations = Notification.objects.filter(user_to_notify=logged_in_user).count()
-        data['qty_of_notifications'] = qty_of_notifcations
-        data['logged_in_user'] = logged_in_user
-        if user in logged_in_user.following.get_queryset():
+        data.update(get_navbar_data(request))
+        if user in data['logged_in_user'].following.get_queryset():
             data['follow_unfollow'] = 'unfollow'
     html = 'profile.html'
     return render(request, html, data)

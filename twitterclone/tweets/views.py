@@ -5,6 +5,8 @@ from twitterclone.tweets.models import Tweet
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.notifications.models import Notification
 from twitterclone.tweets.helpers import make_notifications
+from twitterclone.helpers import get_navbar_data
+
 
 @login_required()
 def add_tweet_view(request):
@@ -23,17 +25,14 @@ def add_tweet_view(request):
             return render(request, 'addtweetsuccess.html')
     else:
         form = WriteTweetForm()
-    return render(request,html, {'form':form})
+    data = get_navbar_data(request)
+    data['form'] = form
+    return render(request,html, data)
 
 def tweet_view(request, tweet_id):
     tweet = Tweet.objects.filter(id=tweet_id).first
-    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
-    qty_of_notifications = Notification.objects.filter(user_to_notify=logged_in_user).count()
+    data = get_navbar_data(request)
     html = 'tweet.html'
-    data = {
-        'tweet':tweet,
-        'logged_in_user':logged_in_user,
-        'qty_of_notifications':qty_of_notifications
-    }
+    data['tweet'] = tweet
     return render(request, html, data)
     
