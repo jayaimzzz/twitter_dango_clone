@@ -18,8 +18,8 @@ def index_view(request):
     }
     return render(request, html, data)
 
-def profile_view(request, user_id):
-    user = TwitterUser.objects.filter(user=user_id).first()
+def profile_view(request, user_name):
+    user = TwitterUser.objects.filter(name=user_name).first()
     tweets = Tweet.objects.filter(author=user)
     sorted_tweets = sorted(tweets, key=lambda tweet: tweet.created, reverse=True)
     following = user.following.get_queryset()
@@ -41,8 +41,8 @@ def profile_view(request, user_id):
     return render(request, html, data)
 
 @login_required
-def toggle_following_view(request, user_id):
-    user_to_follow = TwitterUser.objects.filter(user=user_id).first()
+def toggle_following_view(request, user_name):
+    user_to_follow = TwitterUser.objects.filter(name=user_name).first()
     logged_in_user = TwitterUser.objects.filter(user=request.user).first()
     if user_to_follow in logged_in_user.following.get_queryset():
         logged_in_user.following.remove(user_to_follow),
@@ -50,4 +50,4 @@ def toggle_following_view(request, user_id):
         logged_in_user.following.add(user_to_follow)
     logged_in_user.save()
     html = 'profile.html'
-    return redirect('/profile/' + str(user_id))
+    return redirect('/profile/' + str(user_name))
