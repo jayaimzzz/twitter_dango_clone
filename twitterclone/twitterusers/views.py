@@ -6,9 +6,14 @@ from twitterclone.notifications.models import Notification
 
 @login_required()
 def index_view(request):
-    tweets = Tweet.objects.all()
-    sorted_tweets = sorted(tweets,key=lambda tweet: tweet.created, reverse=True)
     logged_in_user = TwitterUser.objects.filter(user=request.user).first()
+    following = logged_in_user.following.get_queryset()
+    # tweets = [tweet for tweet in Tweet.objects.filter(author=user) for user in following]
+    tweets = []
+    for user in following:
+        for tweet in Tweet.objects.filter(author=user):
+            tweets.append(tweet)
+    sorted_tweets = sorted(tweets,key=lambda tweet: tweet.created, reverse=True)
     qty_of_notifcations = Notification.objects.filter(user_to_notify=logged_in_user).count()
     html = 'index.html'
     data = {
