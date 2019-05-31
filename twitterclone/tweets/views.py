@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from twitterclone.tweets.forms import WriteTweetForm
 from twitterclone.tweets.models import Tweet

@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from twitterclone.twitterusers.views import IndexView
-from twitterclone.authentication.views import signup_view
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.tweets.models import Tweet
 from twitterclone.notifications.models import Notification

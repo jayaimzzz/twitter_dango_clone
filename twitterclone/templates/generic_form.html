@@ -4,3 +4,10 @@
     {{ form.as_p }}
     <input type='submit' value='submit'>
 </form>
+<div>
+    {% if title == 'login' %}
+    <a href='/signup'>need to sign up first?</a>
+    {% else %}
+    <a href='/login'>already signed up and need to login?</a>
+    {% endif %}
+</div>
