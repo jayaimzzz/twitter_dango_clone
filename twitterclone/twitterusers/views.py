@@ -57,14 +57,15 @@ class ProfileView(View):
         html = 'profile.html'
         return render(request, html, data)
 
-@login_required
-def toggle_following_view(request, user_name):
-    user_to_follow = TwitterUser.objects.filter(name=user_name).first()
-    logged_in_user = TwitterUser.objects.filter(user=request.user).first()
-    if user_to_follow in logged_in_user.following.get_queryset():
-        logged_in_user.following.remove(user_to_follow),
-    else:
-        logged_in_user.following.add(user_to_follow)
-    logged_in_user.save()
-    html = 'profile.html'
-    return redirect('/profile/' + str(user_name))
+
+@method_decorator(login_required, name='dispatch')
+class ToggleFollowingView(View):
+    def get(self, request, user_name):
+        user_to_follow = TwitterUser.objects.filter(name=user_name).first()
+        logged_in_user = TwitterUser.objects.filter(user=request.user).first()
+        if user_to_follow in logged_in_user.following.get_queryset():
+            logged_in_user.following.remove(user_to_follow),
+        else:
+            logged_in_user.following.add(user_to_follow)
+        logged_in_user.save()
+        return redirect('/profile/' + str(user_name))
