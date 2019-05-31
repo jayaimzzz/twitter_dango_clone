@@ -1,7 +1,7 @@
 from django.urls import path
-from twitterclone.tweets.views import add_tweet_view, tweet_view
+from twitterclone.tweets.views import AddTweetView, TweetView
 
 urlpatterns = [
-    path('addtweet/', add_tweet_view),
-    path('tweet/<int:tweet_id>/', tweet_view)
+    path('addtweet/', AddTweetView.as_view()),
+    path('tweet/<int:tweet_id>/', TweetView.as_view())
 ]

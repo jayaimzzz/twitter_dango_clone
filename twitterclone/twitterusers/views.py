@@ -2,11 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView
 from twitterclone.tweets.models import Tweet
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.notifications.models import Notification
-from twitterclone.helpers import get_navbar_data
 
 
 class NavBarMixIn(object):

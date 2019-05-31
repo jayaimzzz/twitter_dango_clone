@@ -1,16 +1,18 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 from twitterclone.authentication.models import TwitterUser
 from twitterclone.notifications.models import Notification
-from twitterclone.helpers import get_navbar_data
+from twitterclone.twitterusers.views import NavBarMixIn
 
 
-def notifications_view(request, user_id):
-    html = 'notifications.html'
-    user = TwitterUser.objects.filter(user=user_id).first()
-    notifications = Notification.objects.filter(user_to_notify=user)
-    notifications_copy = map(str,notifications)
-    notifications.delete()
-    data = get_navbar_data(request)
-    data['notifications'] = notifications_copy
-    return render(request, html, data)
+class NotificationsView(NavBarMixIn,TemplateView):
+    template_name = 'notifications.html'
+
+    def get_context_data(self,user_id):
+        user = TwitterUser.objects.filter(user=user_id).first()
+        notifications = Notification.objects.filter(user_to_notify=user)
+        notifications_copy = map(str,notifications)
+        notifications.delete()
+        context = self.get_navbar_data(self.request)
+        context['notifications'] = notifications_copy
+        return context
