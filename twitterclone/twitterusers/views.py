@@ -37,25 +37,26 @@ class IndexView(NavBarMixIn,TemplateView):
         return context
 
 
-class ProfileView(View):
-    def get(self, request, user_name):
+class ProfileView(NavBarMixIn,TemplateView):
+    template_name = 'profile.html'
+
+    def get_context_data(self, user_name):
         user = TwitterUser.objects.filter(name=user_name).first()
         tweets = Tweet.objects.filter(author=user)
         sorted_tweets = sorted(tweets, key=lambda tweet: tweet.created, reverse=True)
         following = user.following.get_queryset()
-        data = {
+        context = {
             'user': user,
             'tweets': sorted_tweets,
             'qty_of_tweets': len(sorted_tweets),
             'follow_unfollow': 'follow',
             'qty_following': following.count()
         }
-        if hasattr(request.user, 'twitteruser'):
-            data.update(get_navbar_data(request))
-            if user in data['logged_in_user'].following.get_queryset():
-                data['follow_unfollow'] = 'unfollow'
-        html = 'profile.html'
-        return render(request, html, data)
+        if hasattr(self.request.user, 'twitteruser'):
+            context.update(self.get_navbar_data(self.request))
+            if user in context['logged_in_user'].following.get_queryset():
+                context['follow_unfollow'] = 'unfollow'
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
